@@ -13,6 +13,9 @@ Functions
 - change current seat based results of the adjecnt seats
 - ignore floor space.
 """
+TAKEN = '#'
+FREE = 'L'
+FLOOR = '.'
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 with open(THIS_DIR+r'\input.txt','r') as f:
@@ -24,21 +27,21 @@ class Chair:
         self.status = value
 
     def set_occupied(self):
-        self.status = '#'
+        self.status = TAKEN
 
     def set_available(self):
-        self.status = 'L'
+        self.status = FREE
 
     def set_floor(self):
-        self.status = '.'
+        self.status = FLOOR
 
     def is_available(self):
-        if self.status == 'L':
+        if self.status == FREE:
             return True
         return False
 
     def is_occuppied(self):
-        if self.status == '#':
+        if self.status == TAKEN:
             return True
         return False
 
@@ -46,7 +49,7 @@ class Chair:
         return self.status
 
     def is_floor(self):
-        if self.status == '.':
+        if self.status == FLOOR:
             return True
         return False
    
@@ -56,6 +59,7 @@ class SeatingPlan():
         self.rows = len(data)
         self.columns = len(data[0])
         self.grid = self.build_grid_from_input(data)
+        self.str_grid = self.get_grid()
 
     def build_grid_from_input(self, data):
         new_grid = []
@@ -71,76 +75,31 @@ class SeatingPlan():
         str_grid = [''.join([x.status for x in line]) for line in self.grid]
         return str_grid
 
-    def update_seating(self):
+
+    def update_seating(self, sight=False):
+        if sight:
+            n_occupied = 5
+        else:
+            n_occupied = 4
         new_grid = self.build_grid_from_input(self.get_grid())
         for y in range(self.rows):
             for x in range(self.columns):
                 current = self.grid[y][x]
                 current_neigh = self.get_neighbours(check_column=x,
-                                                    check_row=y)
+                                                    check_row=y,
+                                                    sight=sight)
+                # Rules for change
                 if current.is_available():
-                    if '#' in current_neigh:
-                        pass
-                    else:
+                    if not TAKEN in current_neigh:
                         new_grid[y][x].set_occupied()     
                 elif current.is_occuppied():
-                    if current_neigh.count('#') >= 4:
+                    if current_neigh.count(TAKEN) >= n_occupied:
                         new_grid[y][x].set_available()
-        self.grid = new_grid
-
-    def update_seating_sight(self):
-        new_grid = self.build_grid_from_input(self.get_grid())
-        for y in range(self.rows):
-            for x in range(self.columns):
-                current = self.grid[y][x]
-                current_neigh = self.get_sightings(check_column=x,
-                                                    check_row=y)
-                if current.is_available():
-                    if '#' in current_neigh:
-                        pass
-                    else:
-                        new_grid[y][x].set_occupied()     
-                elif current.is_occuppied():
-                    if current_neigh.count('#') >= 5:
-                        new_grid[y][x].set_available()
+                
         self.grid = new_grid
 
 
-    def get_neighbours(self, check_column, check_row):
-    #how deep the search is:
-        search_min = -1 
-        search_max = 2 # max range value 
-
-        #empty list to append neighbours into.
-        neighbour_list = []
-        for row in range(search_min,search_max):
-            for column in range(search_min,search_max):
-                neighbour_row = check_row + row
-                neighbour_column = check_column + column 
-
-                valid_neighbour = True
-
-                # if this is main square
-                if neighbour_row == check_row \
-                    and neighbour_column == check_column:
-                    valid_neighbour = False
-
-                # up/down out of bounds
-                if neighbour_row < 0 \
-                    or neighbour_row >= self.rows:
-                    valid_neighbour = False
-
-                # left/right out of bounds
-                if neighbour_column < 0 \
-                    or neighbour_column >= self.columns:
-                    valid_neighbour = False
-
-                # valid neighbour
-                if valid_neighbour:
-                    neighbour_list.append(self.grid[neighbour_row][neighbour_column].get_status())
-        return neighbour_list  
-
-    def get_sightings(self, check_column, check_row):
+    def get_neighbours(self, check_column, check_row, sight=False):
         search_min = -1 
         search_max = 2 # max range value 
 
@@ -150,7 +109,6 @@ class SeatingPlan():
                 neighbour_row = check_row + row
                 neighbour_column = check_column + column
 
-                level = 1
                 valid_neighbour = True
                 while valid_neighbour:
                     # if this is main square
@@ -168,11 +126,14 @@ class SeatingPlan():
                         or neighbour_column >= self.columns:
                         valid_neighbour = False
                         break
-        
-                    if self.grid[neighbour_row][neighbour_column].is_floor():
-                        pass #valid_neighbour = False
+
+                    if sight:
+                        if self.grid[neighbour_row][neighbour_column].is_floor():
+                            pass 
+                        else:
+                            valid_neighbour = True
+                            break
                     else:
-                        valid_neighbour = True
                         break
 
                     neighbour_row += row
@@ -183,34 +144,27 @@ class SeatingPlan():
                     neighbour_list.append(self.grid[neighbour_row][neighbour_column].get_status())
         return neighbour_list  
     
-    def complete(self):
+    def complete(self, sight=False):
         previous = 0
         while True:
-            self.update_seating()    
-            current = self.count_occupied()        
-            if current == previous:
-                break
-            previous = current
-
-    def complete_sight(self):
-        previous = 0
-        while True:
-            self.update_seating_sight()    
+            self.update_seating(sight=sight)    
             current = self.count_occupied()        
             if current == previous:
                 break
             previous = current
 
     def count_occupied(self):
-        count = sum([1 for line in self.grid for x in line if x.status == '#' ])
+        count = sum([1 for line in self.grid for x in line if x.status == TAKEN ])
         return count
 
-#part 1
-model = SeatingPlan(data)
-model.complete() 
-print(model.count_occupied())
+if '__name__' == '__main__':
+        
+    #part 1
+    model = SeatingPlan(data)
+    model.complete() 
+    print(model.count_occupied())
 
-# part 2
-model = SeatingPlan(data)
-model.complete_sight() 
-print(model.count_occupied())
+    # part 2
+    model = SeatingPlan(data)
+    model.complete(sight=True) 
+    print(model.count_occupied())

@@ -1,7 +1,4 @@
-# from day_11.day_11 import SeatingPlan
-
 import unittest
-# from unittest import result
 import day_11
 import os
 
@@ -45,14 +42,12 @@ class Test_Chair(unittest.TestCase):
 class Test_SeatingPlan(unittest.TestCase):
     def load_test_data(self, test_type, n_tests=5):
         THIS_DIR = os.path.dirname(os.path.abspath(__file__))
-        test_input_file = []
         with open(THIS_DIR+r'\test_input.txt','r') as f:
             test_input_file = f.read().split('\n')
 
         test_output = {}
         test_range = range(n_tests)
         for i in test_range:
-            list_items = []
             with open(THIS_DIR+r'\test_'+str(test_type)+r'_'+str(i)+r'.txt','r') as f:
                 list_items = f.read().split('\n')
             test_output[i] = list_items
@@ -139,27 +134,27 @@ class Test_SeatingPlan(unittest.TestCase):
         result = day_11.SeatingPlan(test_input)
         self.assertEqual(result.count_occupied(), 3)
 
-    def test_get_sightings_0(self):
+    def test_get_sightings_full(self):
         THIS_DIR = os.path.dirname(os.path.abspath(__file__))
         with open(THIS_DIR+r'\test_sighting_full.txt','r') as f:
             test_input_file = f.read().split('\n')
         model = day_11.SeatingPlan(test_input_file)
-        neighbours = model.get_sightings(check_column=3, check_row=4)
+        neighbours = model.get_neighbours(check_column=3, check_row=4, sight=True)
         self.assertEqual(len(neighbours), 8)
 
-    def test_get_sightings_1(self):
+    def test_get_sightings_empty(self):
         THIS_DIR = os.path.dirname(os.path.abspath(__file__))
         with open(THIS_DIR+r'\test_sighting_empty.txt','r') as f:
             test_input_file = f.read().split('\n')
         model = day_11.SeatingPlan(test_input_file)
-        neighbours = model.get_sightings(check_column=3, check_row=3)
+        neighbours = model.get_neighbours(check_column=3, check_row=3, sight=True)
         self.assertEqual(len(neighbours), 0)
         
     def test_update_seating_sighting_chain(self):
         test_input, test_output_dict = self.load_test_data('sightings', n_tests=6)
         result = day_11.SeatingPlan(test_input)
         for key in test_output_dict:
-            result.update_seating_sight() 
+            result.update_seating(sight=True) 
             self.assertListEqual(result.get_grid(), test_output_dict[key])
 
   
