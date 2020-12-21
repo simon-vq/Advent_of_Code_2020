@@ -68,7 +68,7 @@ class Test_SeatingPlan(unittest.TestCase):
         col=3
         test_input = self.create_blank_grid(row=2, col=col)
         results = day_11.SeatingPlan(test_input)
-        self.assertEqual(results.columns, col)
+        self.assertEqual(results.columns, col) 
 
     def test_build_grid_from_input(self):
         test_input = self.create_blank_grid(row=2, col=3)
@@ -115,17 +115,6 @@ class Test_SeatingPlan(unittest.TestCase):
         result = day_11.SeatingPlan(test_input)
         result.update_seating()
         self.assertNotEqual(result.get_grid(), test_input)
-
-    # def test_compelte(self):
-    #     test_input, test_output_dict = self.load_test_data('output')
-    #     keys = list(test_output_dict.keys())
-
-    def test_count_occupied(self):
-        test_input = [['#','.','#'],
-                      ['L','L','#'],
-                      ['.','.','L']]
-        result = day_11.SeatingPlan(test_input)
-        self.assertEqual(result.count_occupied(), 3)
 
     def test_count_occupied(self):
         test_input = [['#','.','#'],

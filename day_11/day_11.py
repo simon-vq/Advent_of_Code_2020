@@ -75,7 +75,6 @@ class SeatingPlan():
         str_grid = [''.join([x.status for x in line]) for line in self.grid]
         return str_grid
 
-
     def update_seating(self, sight=False):
         if sight:
             n_occupied = 5
@@ -95,9 +94,7 @@ class SeatingPlan():
                 elif current.is_occuppied():
                     if current_neigh.count(TAKEN) >= n_occupied:
                         new_grid[y][x].set_available()
-                
         self.grid = new_grid
-
 
     def get_neighbours(self, check_column, check_row, sight=False):
         search_min = -1 
@@ -126,16 +123,11 @@ class SeatingPlan():
                         or neighbour_column >= self.columns:
                         valid_neighbour = False
                         break
-
                     if sight:
-                        if self.grid[neighbour_row][neighbour_column].is_floor():
-                            pass 
-                        else:
-                            valid_neighbour = True
+                        if not self.grid[neighbour_row][neighbour_column].is_floor():
                             break
                     else:
                         break
-
                     neighbour_row += row
                     neighbour_column += column
 
