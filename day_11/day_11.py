@@ -26,33 +26,33 @@ class Chair:
     def __init__(self,value=''):
         self.status = value
 
-    def set_occupied(self):
-        self.status = TAKEN
+    def get_status(self):
+        return self.status
 
     def set_available(self):
         self.status = FREE
+
+    def set_occupied(self):
+        self.status = TAKEN
 
     def set_floor(self):
         self.status = FLOOR
 
     def is_available(self):
-        if self.status == FREE:
+        if self.get_status() == FREE:
             return True
         return False
 
     def is_occuppied(self):
-        if self.status == TAKEN:
+        if self.get_status() == TAKEN:
             return True
         return False
-
-    def get_status(self):
-        return self.status
 
     def is_floor(self):
-        if self.status == FLOOR:
+        if self.get_status() == FLOOR:
             return True
         return False
-   
+
 
 class SeatingPlan():
     def __init__(self, data):
@@ -100,13 +100,11 @@ class SeatingPlan():
     def get_neighbours(self, check_column, check_row, sight=False):
         search_min = -1 
         search_max = 2 # max range value 
-
         neighbour_list = []
         for row in range(search_min, search_max):
             for column in range(search_min, search_max):
                 neighbour_row = check_row + row
                 neighbour_column = check_column + column
-
                 valid_neighbour = True
                 while valid_neighbour:
                     # if this is main square
@@ -131,7 +129,6 @@ class SeatingPlan():
                         break
                     neighbour_row += row
                     neighbour_column += column
-
                 # valid neighbour
                 if valid_neighbour:
                     neighbour_list.append(self.grid[neighbour_row][neighbour_column].get_status())
@@ -149,6 +146,7 @@ class SeatingPlan():
     def count_occupied(self):
         count = sum([1 for line in self.grid for x in line if x.status == TAKEN ])
         return count
+
 
 if '__name__' == '__main__':
         
