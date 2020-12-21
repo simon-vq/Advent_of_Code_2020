@@ -1,0 +1,17 @@
+{
+    
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./day_11",
+        "-p",
+        "test_*.py"
+    ],
+    "python.pythonPath": "C:\\Users\\Scuff\\anaconda3\\python.exe"
+    // "python.testing.pytestArgs": [
+    //     "day_11"
+    // ]
+}
