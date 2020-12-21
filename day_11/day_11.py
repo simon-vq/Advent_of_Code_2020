@@ -95,6 +95,7 @@ class SeatingPlan():
                     if current_neigh.count(TAKEN) >= n_occupied:
                         new_grid[y][x].set_available()
         self.grid = new_grid
+        self.str_grid = self.get_grid()
 
     def get_neighbours(self, check_column, check_row, sight=False):
         search_min = -1 
@@ -137,7 +138,7 @@ class SeatingPlan():
         return neighbour_list  
     
     def complete(self, sight=False):
-        previous = 0
+        previous = -1
         while True:
             self.update_seating(sight=sight)    
             current = self.count_occupied()        
