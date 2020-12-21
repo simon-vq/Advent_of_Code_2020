@@ -114,7 +114,7 @@ class SeatingPlan():
                         and neighbour_column == check_column:
                         valid_neighbour = False
                         break
-                    # up/down out of bounds
+                    # top/bottom out of bounds
                     if neighbour_row < 0 \
                         or neighbour_row >= self.rows:
                         valid_neighbour = False
