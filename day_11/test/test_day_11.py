@@ -147,7 +147,7 @@ class Test_SeatingPlan(unittest.TestCase):
             self.assertListEqual(result.get_grid(), test_output_dict[key])
 
   
-if '__name__' == '__main__':
+if __name__ == '__main__':
     unittest.main()
 
 

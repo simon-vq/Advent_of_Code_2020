@@ -148,7 +148,7 @@ class SeatingPlan():
         return count
 
 
-if '__name__' == '__main__':
+if __name__ == '__main__':
         
     #part 1
     model = SeatingPlan(data)
