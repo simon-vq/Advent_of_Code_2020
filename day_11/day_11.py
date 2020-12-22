@@ -17,10 +17,7 @@ TAKEN = '#'
 FREE = 'L'
 FLOOR = '.'
 
-THIS_DIR = os.path.dirname(os.path.abspath(__file__))
-with open(THIS_DIR+r'\input.txt','r') as f:
-    data = f.read()
-    data = data.splitlines()
+
 
 class Chair:
     def __init__(self,value=''):
@@ -149,7 +146,11 @@ class SeatingPlan():
 
 
 if __name__ == '__main__':
-        
+    THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+    with open(THIS_DIR+r'\input.txt','r') as f:
+        data = f.read()
+        data = data.splitlines()
+            
     #part 1
     model = SeatingPlan(data)
     model.complete() 

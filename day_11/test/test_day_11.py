@@ -1,5 +1,5 @@
 import unittest
-from day_11 import Chair, SeatingPlan
+from day_11.day_11 import Chair, SeatingPlan
 import os
 
 
