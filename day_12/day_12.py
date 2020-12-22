@@ -13,13 +13,11 @@ import math
 class Waypoint:
     def __init__(self, ship_E, ship_N):
         self.configure_waypoint()
-        self.update_waypoint_location(ship_E, ship_N)
-        
+        self.update_waypoint_location(ship_E, ship_N)  
 
     def configure_waypoint(self, wp_E=10, wp_N=1):
         self.config_E = wp_E
         self.config_N = wp_N
-
 
     def move_waypoint_north(self, steps):
         self.config_N += int(steps)
@@ -33,7 +31,6 @@ class Waypoint:
     def move_waypoint_west(self, steps):
         self.config_E -= int(steps)
         self.location_E -= int(steps)
-
 
     def update_waypoint_location(self, ship_E, ship_N):
         self.location_E = ship_E + self.config_E
@@ -67,8 +64,6 @@ class Waypoint:
                                                     point=self.get_waypoint_config(),
                                                     angle=math.radians(deg))
 
-                                                    
-
 
 class Ship:
     def __init__(self, facing='E', east=0, north=0) -> None:
@@ -90,12 +85,6 @@ class Ship:
         direction = instruction[0] 
         movement = int(instruction[1:])
         return (direction, movement)
-    
-    # def move_to_waypoint(self, steps):
-    #     for _ in range(steps):
-    #         self.east, self.north = self.waypoint.get_waypoint()
-    #         self.waypoint.update_waypoint(ship_E=self.east,
-    #                                     ship_N=self.north)
 
     def move_north(self, steps):
         self.north += int(steps)
@@ -184,7 +173,7 @@ class Ship:
         for instruction in list_instructions:
             self.process_instruction(instruction=instruction)
 
-    def get_distance(self, start=(0,0)):
+    def get_distance(self):
         co_ords = self.get_position()
         x = abs(co_ords[0])
         y = abs(co_ords[1])
