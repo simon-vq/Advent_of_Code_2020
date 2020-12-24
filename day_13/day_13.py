@@ -14,10 +14,15 @@ import os
 
 class Bus:
     def __init__(self, id_num=1) -> None:
-        self.id_num = int(id_num)
-
+        if id_num == 'x':
+            self.id_num = 1
+        else:
+            self.id_num = int(id_num)
+    
     def get_time_till_next_bus(self, arrival):
         time_till_next = self.id_num - (arrival % self.id_num)
+        if time_till_next == self.id_num:
+            return 0
         return time_till_next
 
     def calculate_closest_bus(self, arrival):
@@ -61,8 +66,26 @@ class Schedule:
         closest_time = min(list(all_bus_times.keys()))
         return [closest_time, all_bus_times[closest_time]]
 
+    def search_sequence(self, time):
+        for i, bus in enumerate(self.buses):
+            mins_to_wait = bus.get_time_till_next_bus(time+i)
+            if mins_to_wait:
+                return False         
+        return True
 
 
+    def find_bus_sequence(self):
+        bus_ids = self.get_all_bus_ids()
+        max_bus = max(bus_ids)
+        max_bus_idx = bus_ids.index(max_bus)
+        count = max_bus - max_bus_idx
+
+        while True:
+            if self.search_sequence(count):
+                break
+            count += max_bus
+
+        return count
 
 if __name__ == '__main__':
     
@@ -70,7 +93,8 @@ if __name__ == '__main__':
     with open(THIS_DIR+r'\input.txt','r') as f:
         data = f.read().split('\n')
     arrival_time = int(data[0])
-    bus_data = [x for x in data[1].split(',') if x is not 'x']
+    origina_bus_data = data[1].split(',')
+    bus_data = [x for x in origina_bus_data if x is not 'x']
     
     #part 1
     bus_schedule = Schedule()
@@ -79,3 +103,17 @@ if __name__ == '__main__':
     print(f'Closest bus:  {bus_id}')
     print(f'Time in mins: {time}')
     print(f'multiplied: {bus_id*time}')
+
+    #part 2
+    bus_schedule = Schedule()
+    bus_schedule.add_multiple_buses(bus_data)
+    time = bus_schedule.find_bus_sequence()
+    print(f'Time in mins: {time}')
+   
+
+    test_seq = [7,13,'x','x',59,'x',31,19]
+    test_obj = Schedule()
+    for bus in test_seq:
+        test_obj.add_bus(Bus(bus))
+    if test_obj.find_bus_sequence() == 1068781:
+        print(test_obj.find_bus_sequence())
